@@ -1,15 +1,9 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 
-const matrix = [
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 1, 0]
-];
-
 const player = {
     pos: {x: 5, y: 5},
-    matrix: matrix
+    matrix: createPiece('T')
 }
 
 let lastTime = 0,
@@ -19,6 +13,61 @@ let lastTime = 0,
 context.scale(20, 20);
 
 const arena = createMatrix(12, 20);
+
+function createPiece(type) {
+    if(type ==='T'){
+        return [
+            [0, 0, 0],
+            [1, 1, 1],
+            [0, 1, 0]
+        ];
+    }else if (type === 'O'){
+        return [
+            [1, 1],
+            [1, 1]
+        ];
+    }else if (type === 'L'){
+        return [
+            [0, 1, 0],
+            [0, 1, 0],
+            [0, 1, 1]
+        ];
+    }else if (type === 'J'){
+        return [
+            [0, 1, 0],
+            [0, 1, 0],
+            [1, 1, 0]
+        ];
+    }else if (type === 'I'){
+        return [
+            [0, 1, 0, 0],
+            [0, 1, 0, 0], 
+            [0, 1, 0, 0],
+            [0, 1, 0, 0]
+        ];
+    }else if (type === 'S'){
+        return [
+            [0, 1, 1],
+            [1, 1, 0],
+            [0, 0, 0]
+        ];
+    }else if (type === 'Z'){
+        return [
+            [1, 1, 0],
+            [0, 1, 1],
+            [0, 0, 0]
+        ];
+    }   
+}
+
+function playerReset() {
+    const pieces = 'ILJOTSZ';
+    console.log(pieces.length * Math.random(), pieces[pieces.length * Math.random() | 0 ])
+    player.matrix = createPiece(pieces[pieces.length * Math.random() | 0 ]);
+    player.pos.y = 0;
+    player.pos.x = (arena.length / 2 | 0) -
+                    (player.matrix[0].length / 2 | 0);
+}
 
 function collide(arena, player) {
     const [m, o] = [player.matrix, player.pos];
@@ -81,7 +130,7 @@ function drawMatrix(matrix, offset) {
 }
 
 function merge(arena, player) {
-    matrix.forEach((row, y) => {
+    player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if(value !== 0){
                arena[y + player.pos.y][x + player.pos.x] = value;
@@ -95,7 +144,7 @@ function playerDrop() {
     if(collide(arena, player)) {
         player.pos.y--;
         merge(arena, player);
-        player.pos.y = 0;
+        playerReset();
     }
     dropCounter = 0;
 }
