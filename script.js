@@ -18,6 +18,8 @@ let lastTime = 0,
 
 context.scale(20, 20);
 
+const arena = createMatrix(12, 20);
+
 function collide(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for(let y = 0; y < m.length; ++y) {
@@ -32,7 +34,12 @@ function collide(arena, player) {
     return false;
 }
 
-const arena = createMatrix(12, 20);
+function playerMove(dir) {
+    player.pos.x += dir;
+    if(collide(arena, player)) {
+        player.pos.x -= dir;
+    }
+}
 
 function draw() {
     context.fillStyle = '#000';
@@ -95,10 +102,10 @@ function playerDrop() {
 
 document.addEventListener('keydown', (e) => {
     if(e.keyCode === 37){
-        player.pos.x--
+       playerMove(-1);
     };
     if(e.keyCode === 39){
-        player.pos.x++
+        playerMove(1);
     };
     if(e.keyCode === 40){
        playerDrop();
