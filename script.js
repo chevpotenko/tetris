@@ -62,11 +62,14 @@ function createPiece(type) {
 
 function playerReset() {
     const pieces = 'ILJOTSZ';
-    console.log(pieces.length * Math.random(), pieces[pieces.length * Math.random() | 0 ])
+    console.log(pieces.length * Math.random(), (pieces.length * Math.random()|0) )
     player.matrix = createPiece(pieces[pieces.length * Math.random() | 0 ]);
     player.pos.y = 0;
     player.pos.x = (arena.length / 2 | 0) -
                     (player.matrix[0].length / 2 | 0);
+    if(collide(arena, player)) {
+        arena.forEach(row => {row.fill(0)});
+    }
 }
 
 function collide(arena, player) {
@@ -77,7 +80,7 @@ function collide(arena, player) {
             (arena[y + o.y] && 
             arena[y + o.y][x + o.x]) !== 0) {
                 return true;
-            }
+            } 
         }
     }
     return false;
